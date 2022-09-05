@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Papa : MonoBehaviour
 {
+    public GameObject bolita;
+    public GameObject Player;
     //public GameObject explosion;
     //float time;
 
@@ -20,6 +22,27 @@ public class Papa : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Destroy(gameObject, 5f);
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            GetComponent<Rigidbody>().AddForce(Vector3.forward * 1000);
+            GetComponent<Rigidbody>().AddForce(Vector3.up * 1000);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "ground")
+        {
+            Debug.Log("Toco Piso");
+            //Destroy(gameObject, 5f);
+            bolita.transform.SetParent(Player.transform);
+            bolita.transform.localPosition = new Vector3(0, 1, 0);
+        }    
+
+        if (other.gameObject.tag == "player")
+        {
+            Debug.Log("Toco Player");
+            //Destroy(gameObject, 5f);
+        }
     }
 }
