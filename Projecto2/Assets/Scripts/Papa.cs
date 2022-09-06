@@ -24,8 +24,11 @@ public class Papa : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            GetComponent<Rigidbody>().AddForce(Vector3.forward * 1000);
-            GetComponent<Rigidbody>().AddForce(Vector3.up * 1000);
+            GetComponent<Rigidbody>().AddForce(Vector3.forward * 500);
+            GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
+            bolita.transform.SetParent(null);
+            bolita.GetComponent<Rigidbody>().useGravity = true;
+            bolita.GetComponent<Collider>().isTrigger = false;
         }
     }
 
@@ -33,16 +36,24 @@ public class Papa : MonoBehaviour
     {
         if (other.gameObject.tag == "ground")
         {
+
             Debug.Log("Toco Piso");
-            //Destroy(gameObject, 5f);
             bolita.transform.SetParent(Player.transform);
-            bolita.transform.localPosition = new Vector3(0, 1, 0);
+            bolita.GetComponent<Rigidbody>().useGravity = false;
+            bolita.transform.localPosition = new Vector3(0, 2, 0);
+            
         }    
 
         if (other.gameObject.tag == "player")
         {
             Debug.Log("Toco Player");
+            bolita.GetComponent<Collider>().isTrigger = true;
             //Destroy(gameObject, 5f);
+        }
+
+        if (other.gameObject.tag == "playerother")
+        {
+            Debug.Log("Toco Playerother");
         }
     }
 }
