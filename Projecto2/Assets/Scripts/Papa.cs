@@ -16,7 +16,7 @@ public class Papa : MonoBehaviour
     {
         bolita.transform.SetParent(Player.transform);
         bolita.GetComponent<Rigidbody>().useGravity = false;
-        bolita.transform.localPosition = new Vector3(0, 2, 0);
+        bolita.transform.localPosition = new Vector3(0, 1, 0);
     }
 
     // Update is called once per frame
@@ -24,16 +24,16 @@ public class Papa : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            bolita.GetComponent<Rigidbody>().AddForce(transform.forward * 500);
-            bolita.GetComponent<Rigidbody>().AddForce(transform.up * 500);
+            bolita.GetComponent<Rigidbody>().AddForce(transform.forward * 250);
+            bolita.GetComponent<Rigidbody>().AddForce(transform.up * 250);
             bolita.transform.SetParent(null);
             bolita.GetComponent<Rigidbody>().useGravity = true;
             bolita.GetComponent<Collider>().isTrigger = false;
         }
 
-        if(bolita.activeSelf)
+        if(bolita.activeSelf == false)
         {
-
+            
         }
     }
 
@@ -46,7 +46,10 @@ public class Papa : MonoBehaviour
 
         if (other.gameObject.tag == "player")
         {
-            bolita.GetComponent<Collider>().isTrigger = true;
+            //while (true)
+            {
+                StartCoroutine(TimerExplossion());
+            }
         }
 
         if (other.gameObject.tag == "playerother")
@@ -59,7 +62,7 @@ public class Papa : MonoBehaviour
     {
         if(other.gameObject.tag == "ground")
         {
-            StartCoroutine(TimerExplossion());
+            //StartCoroutine(TimerExplossion());
         }
     }
 
@@ -74,9 +77,10 @@ public class Papa : MonoBehaviour
 
     private IEnumerator TimerExplossion()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
         Debug.Log("Esto");
         bolita.SetActive(false);
+        bolita.transform.SetParent(null);
         yield return new Null();
     }
 }
