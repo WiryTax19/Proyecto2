@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Papa : MonoBehaviour
@@ -9,8 +10,6 @@ public class Papa : MonoBehaviour
     public GameObject bolita;
     public GameObject Player;
 
-    //public GameObject explosion;
-    //float time;
 
     // Start is called before the first frame update
     void Start()
@@ -18,11 +17,6 @@ public class Papa : MonoBehaviour
         bolita.transform.SetParent(Player.transform);
         bolita.GetComponent<Rigidbody>().useGravity = false;
         bolita.transform.localPosition = new Vector3(0, 2, 0);
-        //time += Time.deltaTime;
-        //if (time >= 3) Instantiate(explosion, transform.position, Quaternion.identity);
-        //{
-        //Destroy(gameObject, 3);
-        //}
     }
 
     // Update is called once per frame
@@ -30,11 +24,16 @@ public class Papa : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            bolita.GetComponent<Rigidbody>().AddForce(Vector3.forward * 500);
-            bolita.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
+            bolita.GetComponent<Rigidbody>().AddForce(transform.forward * 500);
+            bolita.GetComponent<Rigidbody>().AddForce(transform.up * 500);
             bolita.transform.SetParent(null);
             bolita.GetComponent<Rigidbody>().useGravity = true;
             bolita.GetComponent<Collider>().isTrigger = false;
+        }
+
+        if(bolita.activeSelf)
+        {
+
         }
     }
 
@@ -56,6 +55,13 @@ public class Papa : MonoBehaviour
             //Destroy(gameObject, 5f);
         }
     }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "ground")
+        {
+            StartCoroutine(TimerExplossion());
+        }
+    }
 
     private IEnumerator TimerReturn()
     {
@@ -66,4 +72,11 @@ public class Papa : MonoBehaviour
         bolita.transform.localPosition = new Vector3(0, 2, 0);
     }
 
+    private IEnumerator TimerExplossion()
+    {
+        yield return new WaitForSeconds(3);
+        Debug.Log("Esto");
+        bolita.SetActive(false);
+        yield return new Null();
+    }
 }
