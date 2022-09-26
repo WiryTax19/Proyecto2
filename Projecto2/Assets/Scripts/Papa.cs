@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class Papa : MonoBehaviour
 {
-    public GameObject bolita;
-    public GameObject Player;
-    public bool itsHided = false;
-    public bool itsHolded = false;
+    [SerializeField] private GameObject bolita;
+    [SerializeField] private GameObject Player;
+    [SerializeField] private bool itsHided = false;
+    //[SerializeField] private bool itsHolded = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +20,10 @@ public class Papa : MonoBehaviour
         bolita.transform.SetParent(null);
         bolita.GetComponent<Rigidbody>().useGravity = true;
         bolita.transform.localPosition = new Vector3(0, 1, 0);
+
+        timerReturn = TimerReturn(3.0f);
+        timerExplossion = TimerExplossion(8.0f);
+        timerRespawn = TimerRespawn(3.0f);
     }
 
     // Update is called once per frame
@@ -33,12 +37,14 @@ public class Papa : MonoBehaviour
             bolita.transform.SetParent(null);
             bolita.GetComponent<Rigidbody>().useGravity = true;
             bolita.GetComponent<Collider>().isTrigger = false;
+
+            //StopCoroutine(timerExplossion);
         }
 
         if(itsHided == true)
         {
             Debug.Log("Se Escondio");
-            StartCoroutine(TimerRespawn());
+            StartCoroutine(timerRespawn);
         }
 
         //if (bolita.transform.parent.parent == Player) 
@@ -57,14 +63,14 @@ public class Papa : MonoBehaviour
         //Si toca el piso empieza el timer para regresar
         if (other.gameObject.tag == "ground")
         {
-            StartCoroutine(TimerReturn());
+            StartCoroutine(timerReturn);
         }
 
         //Si toca al player empieza el timer de explosion
         if (other.gameObject.tag == "player")
         {
-            itsHolded = true;
-            StartCoroutine(TimerExplossion());
+            //itsHolded = true;
+            StartCoroutine(timerExplossion);
         }
 
         if (other.gameObject.tag == "playerother")
@@ -72,23 +78,26 @@ public class Papa : MonoBehaviour
             
         }
     }
+    private IEnumerator timerReturn;
+    private IEnumerator timerExplossion;
+    private IEnumerator timerRespawn;
 
-    private IEnumerator TimerReturn()
+    private IEnumerator TimerReturn(float waitTime)
     {
         //Regresa con Player despues de los segundos
         Debug.Log("Empezo TimerReturn");
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(waitTime);
 
         bolita.transform.SetParent(Player.transform);
         bolita.GetComponent<Rigidbody>().useGravity = false;
         bolita.transform.localPosition = new Vector3(0, 2, 0);
     }
 
-    private IEnumerator TimerExplossion()
+    private IEnumerator TimerExplossion(float waitTime)
     {
         //Se esconde si pasan los segundos
         Debug.Log("Empezo TimerExplossion");
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(waitTime);
         Debug.Log("BUUUM Explotaste");
         bolita.GetComponent<Renderer>().enabled = false;
         bolita.transform.SetParent(null);
@@ -96,11 +105,11 @@ public class Papa : MonoBehaviour
         itsHided = true;
     }
 
-    private IEnumerator TimerRespawn()
+    private IEnumerator TimerRespawn(float waitTime)
     {
         Debug.Log("Empezo TimerRespawn");
         itsHided = false;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(waitTime);
 
         bolita.GetComponent<Rigidbody>().useGravity = true;
         bolita.GetComponent<Renderer>().enabled = true;
